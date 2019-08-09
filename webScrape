@@ -1,0 +1,45 @@
+Sub grabFromAZ()
+    
+    Dim FBAstring As String
+    Dim first As String
+    Dim second As String
+    Dim third As String
+    
+    FBAstring = Right(Range("D10"), 12)
+    
+the_start:
+
+Set objIE = CreateObject("InternetExplorer.Application")
+objIE.Top = 0
+objIE.Left = 0
+objIE.Width = 800
+objIE.Height = 600
+objIE.Visible = True 'We will see the window navigation- false to not see it.
+
+On Error Resume Next
+objIE.navigate ("https://sellercentral.amazon.com/gp/fba/inbound-shipment-workflow/index.html#" & FBAstring & "/prepare")
+
+Do
+DoEvents
+    If Err.Number <> 0 Then
+        objIE.Quit
+        Set objIE = Nothing
+        GoTo the_start:
+    End If
+ Loop Until objIE.readystate = READYSTATE_COMPLETE And Not IE.Busy
+ 
+ Dim doc As Object
+ Set doc = objIE.document.getElementById("fba-core-view-meta-data-shipment-name")
+ 
+' first = Trim(objIE.doc.getElementsByTagName("dd")(0).innerText)
+' second = objIE.doc.body.getElementById("fba-core-page-meta-primary").getElementsByTagName("dd")(1).innerText
+' third = objIE.getElementById("fba-core-page-meta-primary").getElementsByTagName("dd")(2).innerText
+    
+    Debug.Print first
+    Debug.Print second
+    Debug.Print third
+    
+    
+    ' Debug.Print FBAstring
+    
+End Sub
